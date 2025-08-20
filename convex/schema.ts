@@ -3,6 +3,9 @@ import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
 export default defineSchema({
+  settings: defineTable({
+    code: v.string(),
+  }),
   shops: defineTable({
     name: v.string(),
     logo: v.string(),
