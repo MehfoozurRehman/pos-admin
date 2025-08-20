@@ -11,18 +11,22 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
       <Card>
         <CardHeader className="text-center">
           <CardTitle>Login to your account</CardTitle>
-          <CardDescription>Enter your email below to login to your account</CardDescription>
+          <CardDescription>Enter your email and password to continue.</CardDescription>
         </CardHeader>
         <CardContent>
           <form>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
-                <Label htmlFor="code">Code</Label>
-                <Input id="code" type="text" required />
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" required />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" type="password" required />
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
-                  Submit
+                  Login
                 </Button>
               </div>
             </div>
