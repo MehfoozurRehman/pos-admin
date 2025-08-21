@@ -3,7 +3,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
-// import { FormEventHandler } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader } from 'lucide-react';
@@ -45,8 +44,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
     startLogin(async () => {
       try {
         const res = await login({ email, password });
-
-        console.log(res);
 
         await saveToken(res);
 
