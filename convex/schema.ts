@@ -9,13 +9,13 @@ export default defineSchema({
     password: v.string(),
   }),
   shops: defineTable({
+    shopId: v.string(),
+    owner: v.string(),
     name: v.string(),
     logo: v.string(),
     location: v.string(),
-    owner: v.string(),
-    shopId: v.string(),
     password: v.string(),
-    lastLogin: v.string(),
+    lastLogin: v.optional(v.string()),
   }),
   payments: defineTable({
     shop: v.id('shops'),
@@ -27,18 +27,13 @@ export default defineSchema({
     name: v.string(),
     description: v.string(),
     category: v.optional(v.string()),
-  }),
-  variants: defineTable({
-    productId: v.string(),
-    product: v.id('products'),
-    name: v.string(),
-    actualPrice: v.number(),
-    sellingPrice: v.number(),
     pictures: v.array(v.string()),
   }),
   inventory: defineTable({
-    variant: v.id('variants'),
-    quantity: v.number(),
+    product: v.id('products'),
+    barcode: v.string(),
+    actualPrice: v.number(),
+    sellingPrice: v.number(),
   }),
   orders: defineTable({
     shop: v.id('shops'),
@@ -47,9 +42,11 @@ export default defineSchema({
     customerPhone: v.string(),
     items: v.array(
       v.object({
-        variant: v.id('variants'),
-        keys: v.array(v.string()),
+        product: v.id('products'),
+        barcode: v.string(),
+        discount: v.optional(v.number()),
       }),
     ),
+    discount: v.optional(v.number()),
   }),
 });
