@@ -1,11 +1,64 @@
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
+// import { FormEventHandler } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Loader } from 'lucide-react';
+import { api } from '@/convex/_generated/api';
 import { cn } from '@/lib/utils';
+import { saveToken } from '@/actions/saveToken';
+import { toast } from 'sonner';
+import toastError from '@/utils/toastError';
+import { useMutation } from 'convex/react';
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+  const router = useRouter();
+
+  const login = useMutation(api.auth.loginAdmin);
+
+  const [isPending, startLogin] = useTransition();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    const email = formData.get('email') as string;
+
+    const password = formData.get('password') as string;
+
+    if (!email) {
+      toast.error('Email is required');
+      return;
+    }
+
+    if (!password) {
+      toast.error('Password is required');
+      return;
+    }
+
+    startLogin(async () => {
+      try {
+        const res = await login({ email, password });
+
+        console.log(res);
+
+        await saveToken(res);
+
+        router.push('/dashboard');
+
+        toast.success('Logged in successfully');
+      } catch (error) {
+        toastError(error);
+      }
+    });
+  };
+
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -14,18 +67,19 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
           <CardDescription>Enter your email and password to continue.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit} noValidate>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" required />
+                <Input id="email" type="email" name="email" required />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" name="password" required />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending && <Loader className="animate-spin mr-1" />}
                   Login
                 </Button>
               </div>
