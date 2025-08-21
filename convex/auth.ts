@@ -48,3 +48,21 @@ export const loginAdmin = mutation({
     return user._id;
   },
 });
+
+export const validateUser = mutation({
+  args: { id: v.string() },
+  handler: async (ctx, args) => {
+    const { id } = args;
+
+    const user = await ctx.db
+      .query('users')
+      .filter((q) => q.eq(q.field('_id'), id))
+      .first();
+
+    if (!user) {
+      return null;
+    }
+
+    return user._id;
+  },
+});
