@@ -1,6 +1,8 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useEffect, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,8 +14,6 @@ import { saveToken } from '@/actions/saveToken';
 import { toast } from 'sonner';
 import toastError from '@/utils/toastError';
 import { useMutation } from 'convex/react';
-import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const router = useRouter();
@@ -21,6 +21,18 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
   const login = useMutation(api.auth.loginAdmin);
 
   const [isPending, startLogin] = useTransition();
+
+  const searchParams = useSearchParams();
+
+  const error = searchParams.get('error');
+
+  useEffect(() => {
+    if (error) {
+      const normalizedError = error.replace('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+      console.log(normalizedError);
+      toastError(normalizedError);
+    }
+  }, [error]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
