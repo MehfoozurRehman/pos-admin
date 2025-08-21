@@ -7,7 +7,7 @@ export default defineSchema({
     name: v.string(),
     email: v.string(),
     password: v.string(),
-  }),
+  }).index('by_email', ['email']),
   shops: defineTable({
     shopId: v.string(),
     owner: v.string(),
