@@ -26,8 +26,8 @@ export default defineSchema({
     shop: v.id('shops'),
     name: v.string(),
     description: v.string(),
-    category: v.optional(v.string()),
-    pictures: v.array(v.string()),
+    categories: v.array(v.string()),
+    picture: v.string(),
   }),
   inventory: defineTable({
     product: v.id('products'),
@@ -36,6 +36,7 @@ export default defineSchema({
     sellingPrice: v.number(),
   }),
   orders: defineTable({
+    orderId: v.string(),
     shop: v.id('shops'),
     status: v.string(),
     customerName: v.string(),
