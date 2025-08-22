@@ -1,17 +1,26 @@
-import { ChartAreaInteractive } from '@/components/chart-area-interactive';
-import { DataTable } from '@/components/data-table';
-import { SectionCards } from '@/components/section-cards';
-import data from './data.json';
+import Link from 'next/link';
+import { api } from '@/convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 
-export default function Page() {
+export default async function ShopsPage() {
+  const shops = await fetchQuery(api.shops.listShops, undefined);
+
   return (
-    <div className="@container/main flex flex-1 flex-col gap-2">
-      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <SectionCards />
-        <div className="px-4 lg:px-6">
-          <ChartAreaInteractive />
-        </div>
-        <DataTable data={data} />
+    <div className="p-6">
+      <h2 className="text-2xl font-semibold mb-4">Shops</h2>
+      <div className="grid gap-3">
+        {shops.length === 0 && <div>No shops yet.</div>}
+        {shops.map((s) => (
+          <Link key={s._id} href={`/dashboard/shops/${s._id}`} className="p-4 border rounded hover:shadow">
+            <div className="flex items-center gap-4">
+              <img src={s.logo || '/file.svg'} alt={s.name} className="w-12 h-12 object-cover rounded" />
+              <div>
+                <div className="font-medium">{s.name}</div>
+                <div className="text-sm text-muted-foreground">{s.location}</div>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );
